@@ -13,17 +13,20 @@ class SectionsPagerAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
     var mFragmentList = ArrayList<Fragment>()
     var mFragmentTitleList = ArrayList<String>()
 
+    fun addFragment(fragment: Fragment, title: String) {
+        mFragmentList.add(fragment)
+        mFragmentTitleList.add(title)
+    }
+
     override fun getItem(position: Int): Fragment {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        return mFragmentList.get(position)
+        return mFragmentList[position]
     }
 
     override fun getCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         return mFragmentList.size
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return super.getPageTitle(position)
+        return mFragmentTitleList[position]
     }
 }

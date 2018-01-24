@@ -16,7 +16,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_main.view.*
+import kotlinx.android.synthetic.main.meds_fragment.view.*
+import kotlinx.android.synthetic.main.today_fragment.view.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,16 +30,32 @@ class MainActivity : AppCompatActivity() {
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private var mViewPager: ViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
+
+        mViewPager = findViewById(R.id.container)
+        setupViewPager(mViewPager as ViewPager)
+
+        var mTabLayout: TabLayout = findViewById(R.id.tabs)
+        mTabLayout.setupWithViewPager(mViewPager)
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 
+    }
+
+    fun setupViewPager(viewPager: ViewPager) {
+        var adapter = SectionsPagerAdapter(supportFragmentManager)
+        adapter.addFragment(TodayFragment(), "Today")
+        adapter.addFragment(MedsFragment(), "Medications")
+        viewPager.adapter = adapter
     }
 
 }
