@@ -33,31 +33,32 @@ class MainActivity : AppCompatActivity() {
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var mViewPager: ViewPager? = null
+    public var database: RoomDatabase? = null
 
-    @Entity
-    data class Med(
-            @PrimaryKey(autoGenerate = true)
-            var uid: Long = 0,
-            var medName: String = "",
-            var routine: String = "",
-            var reminderTime: String = ""
-    )
-
-    @Dao
-    interface MedDao {
-
-        @Query("SELECT * FROM med")
-        fun getAllMeds(): Flowable<List<Med>>
-
-        @Insert
-        fun insert(med: Med)
-    }
-
-    @Database(entities = arrayOf(Med::class), version = 1, exportSchema = false)
-    abstract class MedDatabase : RoomDatabase() {
-
-        abstract fun medDao(): MedDao
-    }
+//    @Entity
+//    data class Med(
+//            @PrimaryKey(autoGenerate = true)
+//            var uid: Long = 0,
+//            var medName: String = "",
+//            var routine: String = "",
+//            var reminderTime: String = ""
+//    )
+//
+//    @Dao
+//    interface MedDao {
+//
+//        @Query("SELECT * FROM med")
+//        fun getAllMeds(): Flowable<List<Med>>
+//
+//        @Insert
+//        fun insert(med: Med)
+//    }
+//
+//    @Database(entities = arrayOf(Med::class), version = 1, exportSchema = false)
+//    abstract class MedDatabase : RoomDatabase() {
+//
+//        abstract fun medDao(): MedDao
+//    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         var mTabLayout: TabLayout = findViewById(R.id.tabs)
         mTabLayout.setupWithViewPager(mViewPager)
 
-        val database =  Room.databaseBuilder(this, MedDatabase::class.java, "we-need-db").build()
+//        database =  Room.databaseBuilder(this, MedDatabase::class.java, "we-need-db").build()
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

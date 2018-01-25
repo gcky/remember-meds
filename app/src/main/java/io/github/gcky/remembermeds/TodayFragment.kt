@@ -35,10 +35,13 @@ class TodayFragment : Fragment() {
             mContext = context
         }
 
-        override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-            val textView = TextView(mContext)
-            textView.text = "ROWWWW"
-            return textView
+        override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup?): View {
+            val layoutInflater = LayoutInflater.from(mContext)
+            val rowMain = layoutInflater.inflate(R.layout.row_main, viewGroup, false)
+            return rowMain
+//            val textView = TextView(mContext)
+//            textView.text = "ROWWWW"
+//            return textView
         }
 
         override fun getItem(position: Int): Any {
