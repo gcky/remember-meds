@@ -1,6 +1,7 @@
 package io.github.gcky.remembermeds
 
 import android.arch.persistence.room.*
+import android.content.Intent
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -35,31 +36,6 @@ class MainActivity : AppCompatActivity() {
     private var mViewPager: ViewPager? = null
     public var database: RoomDatabase? = null
 
-//    @Entity
-//    data class Med(
-//            @PrimaryKey(autoGenerate = true)
-//            var uid: Long = 0,
-//            var medName: String = "",
-//            var routine: String = "",
-//            var reminderTime: String = ""
-//    )
-//
-//    @Dao
-//    interface MedDao {
-//
-//        @Query("SELECT * FROM med")
-//        fun getAllMeds(): Flowable<List<Med>>
-//
-//        @Insert
-//        fun insert(med: Med)
-//    }
-//
-//    @Database(entities = arrayOf(Med::class), version = 1, exportSchema = false)
-//    abstract class MedDatabase : RoomDatabase() {
-//
-//        abstract fun medDao(): MedDao
-//    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,20 +46,27 @@ class MainActivity : AppCompatActivity() {
         mViewPager = findViewById(R.id.container)
         setupViewPager(mViewPager as ViewPager)
 
-        var mTabLayout: TabLayout = findViewById(R.id.tabs)
+        val mTabLayout: TabLayout = findViewById(R.id.tabs)
         mTabLayout.setupWithViewPager(mViewPager)
 
 //        database =  Room.databaseBuilder(this, MedDatabase::class.java, "we-need-db").build()
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
+//        }
+
+        fab.setOnClickListener { view -> startDetailActivity() }
 
     }
 
+    fun startDetailActivity() {
+        val i: Intent = Intent(this, DetailActivity::class.java)
+        startActivity(i)
+    }
+
     fun setupViewPager(viewPager: ViewPager) {
-        var adapter = SectionsPagerAdapter(supportFragmentManager)
+        val adapter = SectionsPagerAdapter(supportFragmentManager)
         adapter.addFragment(TodayFragment(), "Today")
         adapter.addFragment(MedsFragment(), "Medications")
         viewPager.adapter = adapter
