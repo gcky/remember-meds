@@ -21,6 +21,12 @@ import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.meds_fragment.view.*
 import kotlinx.android.synthetic.main.today_fragment.view.*
+import android.R.attr.data
+import android.app.Activity
+import android.arch.lifecycle.ViewModelProvider
+import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
+import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +38,7 @@ class MainActivity : AppCompatActivity() {
      * may be best to switch to a
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
+
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var mViewPager: ViewPager? = null
     public var database: RoomDatabase? = null
@@ -60,8 +67,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
     fun startDetailActivity() {
-        val i: Intent = Intent(this, DetailActivity::class.java)
+        val i = Intent(this, DetailActivity::class.java)
         startActivity(i)
     }
 

@@ -1,6 +1,5 @@
 package io.github.gcky.remembermeds
 
-import android.arch.persistence.room.*
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,16 +9,11 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
-import io.reactivex.Flowable
-import android.app.LauncherActivity.ListItem
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.support.annotation.Nullable
 import io.github.gcky.remembermeds.data.Med
-import io.github.gcky.remembermeds.viewmodel.CustomViewModelFactory
 import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
-import kotlinx.android.synthetic.main.today_fragment.*
 import javax.inject.Inject
 
 
@@ -90,29 +84,23 @@ class TodayFragment : Fragment() {
 
         override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup?): View {
             val layoutInflater = LayoutInflater.from(mContext)
-            val rowMain = layoutInflater.inflate(R.layout.row_main, viewGroup, false)
-            val medNameTextView = rowMain.findViewById<TextView>(R.id.textView)
-            val medRoutineTextView = rowMain.findViewById<TextView>(R.id.textView3)
+            val rowMain = layoutInflater.inflate(R.layout.today_row_main, viewGroup, false)
+            val medNameTextView = rowMain.findViewById<TextView>(R.id.medsMedName)
+            val medRoutineTextView = rowMain.findViewById<TextView>(R.id.medsRoutine)
             medNameTextView.text = meds!![position].medName
             medRoutineTextView.text = meds!![position].routine
             return rowMain
-//            val textView = TextView(mContext)
-//            textView.text = "ROWWWW"
-//            return textView
         }
 
         override fun getItem(position: Int): Any {
-//            return "TEST"
             return meds!![position].medName
         }
 
         override fun getItemId(position: Int): Long {
-//            return 1
             return meds!![position].uid
         }
 
         override fun getCount(): Int {
-//            return 5
             return meds!!.size
         }
 
