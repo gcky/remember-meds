@@ -11,12 +11,33 @@ import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
 import io.reactivex.Flowable
+import android.app.LauncherActivity.ListItem
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
+import android.support.annotation.Nullable
+import io.github.gcky.remembermeds.data.Med
+import io.github.gcky.remembermeds.viewmodel.CustomViewModelFactory
+import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
+import javax.inject.Inject
+
 
 /**
  * Created by Gordon on 23-Jan-18.
  */
 
 class TodayFragment : Fragment() {
+
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var medCollectionViewModel: MedCollectionViewModel
+    private var meds: List<Med>? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity.application as RememberMedApplication)
+                .applicationComponent!!
+                .inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.today_fragment, container, false)
@@ -25,6 +46,24 @@ class TodayFragment : Fragment() {
         todayListView?.adapter = MyCustomAdapter(activity)
 
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        medCollectionViewModel = ViewModelProviders.of(activity, viewModelFactory)
+                .get(MedCollectionViewModel::class.java)
+
+        val observer: Observer<List<Med>> = Observer {
+            fun onChanged(@Nullable meds: List<Med>) {
+                if (this@TodayFragment.meds == null) {
+                    this.meds = meds
+//                    setListData(meds)
+                }
+            }
+        }
+
+        medCollectionViewModel.getMeds().observe(this, observer )
     }
 
     private class MyCustomAdapter(context: Context): BaseAdapter() {
