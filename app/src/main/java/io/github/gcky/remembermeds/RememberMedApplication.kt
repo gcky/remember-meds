@@ -4,6 +4,7 @@ import io.github.gcky.remembermeds.dependencyinjection.RoomModule
 import io.github.gcky.remembermeds.dependencyinjection.ApplicationModule
 import android.app.Application
 import io.github.gcky.remembermeds.dependencyinjection.ApplicationComponent
+import io.github.gcky.remembermeds.dependencyinjection.DaggerApplicationComponent
 
 
 /**

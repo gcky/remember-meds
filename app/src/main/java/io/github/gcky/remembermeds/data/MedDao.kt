@@ -13,7 +13,7 @@ interface MedDao {
     @Query("SELECT * FROM Med")
     fun getAllMeds(): LiveData<List<Med>>
 
-    @Query("SELECT * FROM Med WHERE itemId = :arg0")
+    @Query("SELECT * FROM Med WHERE itemId = :itemId")
     fun getMedById(itemId: String): LiveData<Med>
 
     @Insert(onConflict = REPLACE)

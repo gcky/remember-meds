@@ -19,6 +19,7 @@ import android.support.annotation.Nullable
 import io.github.gcky.remembermeds.data.Med
 import io.github.gcky.remembermeds.viewmodel.CustomViewModelFactory
 import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
+import kotlinx.android.synthetic.main.today_fragment.*
 import javax.inject.Inject
 
 
@@ -30,7 +31,11 @@ class TodayFragment : Fragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var medCollectionViewModel: MedCollectionViewModel
-    private var meds: List<Med>? = null
+    private var meds: List<Med>? = listOf(
+            Med(0, "abcde", "New Med 1", "Breakfast", "Time"),
+            Med(1, "axxxx", "New Med 2", "Dinner", "Time"),
+            Med(2, "esdfe", "New Med 3", "Breakfast", "Time")
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,19 +59,28 @@ class TodayFragment : Fragment() {
         medCollectionViewModel = ViewModelProviders.of(activity, viewModelFactory)
                 .get(MedCollectionViewModel::class.java)
 
-        val observer: Observer<List<Med>> = Observer {
-            fun onChanged(@Nullable meds: List<Med>) {
-                if (this@TodayFragment.meds == null) {
-                    this.meds = meds
-//                    setListData(meds)
-                }
-            }
-        }
+        medCollectionViewModel.getMeds().observe(this,
+                object: Observer<List<Med>> {
+                    override fun onChanged(t: List<Med>?) {
+//                        if (this@TodayFragment.meds == null) {
+//                            setListData(t)
+//                        }
+                        println(t)
+                        setListData(t)
+                    }
 
-        medCollectionViewModel.getMeds().observe(this, observer )
+                })
     }
 
-    private class MyCustomAdapter(context: Context): BaseAdapter() {
+    fun setListData(medsList: List<Med>?) {
+        println("INIT MEDS")
+        println(medsList)
+        meds = medsList
+        val todayListView: ListView? = view?.findViewById(R.id.today_list_view)
+        (todayListView?.adapter as BaseAdapter).notifyDataSetChanged()
+    }
+
+    private inner class MyCustomAdapter(context: Context): BaseAdapter() {
 
         private val mContext: Context
 
@@ -77,6 +91,10 @@ class TodayFragment : Fragment() {
         override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup?): View {
             val layoutInflater = LayoutInflater.from(mContext)
             val rowMain = layoutInflater.inflate(R.layout.row_main, viewGroup, false)
+            val medNameTextView = rowMain.findViewById<TextView>(R.id.textView)
+            val medRoutineTextView = rowMain.findViewById<TextView>(R.id.textView3)
+            medNameTextView.text = meds!![position].medName
+            medRoutineTextView.text = meds!![position].routine
             return rowMain
 //            val textView = TextView(mContext)
 //            textView.text = "ROWWWW"
@@ -84,15 +102,18 @@ class TodayFragment : Fragment() {
         }
 
         override fun getItem(position: Int): Any {
-            return "TEST STRING"
+//            return "TEST"
+            return meds!![position].medName
         }
 
         override fun getItemId(position: Int): Long {
-            return position.toLong()
+//            return 1
+            return meds!![position].uid
         }
 
         override fun getCount(): Int {
-            return 5
+//            return 5
+            return meds!!.size
         }
 
     }
