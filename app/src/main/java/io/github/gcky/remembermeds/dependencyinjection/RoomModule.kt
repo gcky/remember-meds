@@ -32,7 +32,7 @@ class RoomModule {
                 MedDatabase::class.java,
                 "Med.db"
         ).build()
-        val testMed = Med(0, "abcde", "New Med LOL", "Breakfast", "Time")
+        val testMed = Med(0, "abcde", "New Med LOL", "Breakfast", "Time", false)
         Single.fromCallable {
             this.database?.medDao()?.insert(testMed)
         }.subscribeOn(Schedulers.io())

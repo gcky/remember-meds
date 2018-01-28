@@ -12,9 +12,16 @@ import android.widget.TextView
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.graphics.Paint
+import android.widget.CheckBox
 import io.github.gcky.remembermeds.data.Med
 import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
 import javax.inject.Inject
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+import io.github.gcky.remembermeds.viewmodel.MedViewModel
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 /**
@@ -25,11 +32,8 @@ class TodayFragment : Fragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var medCollectionViewModel: MedCollectionViewModel
-    private var meds: List<Med>? = listOf(
-            Med(0, "abcde", "New Med 1", "Breakfast", "Time"),
-            Med(1, "axxxx", "New Med 2", "Dinner", "Time"),
-            Med(2, "esdfe", "New Med 3", "Breakfast", "Time")
-    )
+    private lateinit var medViewModel: MedViewModel
+    private var meds: List<Med>? = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +56,9 @@ class TodayFragment : Fragment() {
 
         medCollectionViewModel = ViewModelProviders.of(activity, viewModelFactory)
                 .get(MedCollectionViewModel::class.java)
+
+        medViewModel = ViewModelProviders.of(activity, viewModelFactory)
+                .get(MedViewModel::class.java)
 
         medCollectionViewModel.getMeds().observe(this,
                 object: Observer<List<Med>> {
@@ -87,8 +94,27 @@ class TodayFragment : Fragment() {
             val rowMain = layoutInflater.inflate(R.layout.today_row_main, viewGroup, false)
             val medNameTextView = rowMain.findViewById<TextView>(R.id.medsMedName)
             val medRoutineTextView = rowMain.findViewById<TextView>(R.id.medsRoutine)
-            medNameTextView.text = meds!![position].medName
-            medRoutineTextView.text = meds!![position].routine
+            val todayCheckBox = rowMain.findViewById<CheckBox>(R.id.todayCheckBox)
+            val med = meds!![position]
+            medNameTextView.text = med.medName
+            medRoutineTextView.text = med.routine
+
+            if (med.taken) {
+                medNameTextView.paintFlags = medNameTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                todayCheckBox.isChecked = true
+            } else {
+                medNameTextView.paintFlags = medNameTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                todayCheckBox.isChecked = false
+            }
+            
+            todayCheckBox.setOnCheckedChangeListener { button, b ->
+                med.taken = b
+                Single.fromCallable {
+                    medViewModel.updateMed(med)
+                }.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe()
+            }
+            
             return rowMain
         }
 

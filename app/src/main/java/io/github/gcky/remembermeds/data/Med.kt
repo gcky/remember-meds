@@ -9,10 +9,11 @@ import io.reactivex.Flowable
 
 @Entity
 data class Med(
-        @PrimaryKey(autoGenerate = true)
-        var uid: Long = 0,
-        var itemId: String = "",
-        var medName: String = "",
-        var routine: String = "",
-        var reminderTime: String = ""
+    @PrimaryKey(autoGenerate = true)
+    var uid: Long = 0,
+    var itemId: String = "",
+    var medName: String = "",
+    var routine: String = "",
+    var reminderTime: String = "",
+    var taken: Boolean = false
 )

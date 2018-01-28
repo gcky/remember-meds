@@ -30,4 +30,8 @@ class MedRepository {
     fun insertMed(med: Med) {
         medDao!!.insert(med)
     }
+
+    fun updateMed(med: Med) {
+        medDao!!.updateMed(med)
+    }
 }

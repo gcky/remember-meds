@@ -13,8 +13,12 @@ import io.github.gcky.remembermeds.data.MedRepository
 
 class MedViewModel internal constructor(private val repository: MedRepository) : ViewModel() {
 
-    fun getListItemById(itemId: String): LiveData<Med> {
+    fun getMedById(itemId: String): LiveData<Med> {
         return repository.getMed(itemId)
+    }
+
+    fun updateMed(med: Med) {
+        return repository.updateMed(med)
     }
 
 }
