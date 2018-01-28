@@ -14,6 +14,7 @@ import javax.inject.Inject
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.support.v4.app.NotificationCompat
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.*
 import io.reactivex.Single
@@ -34,6 +35,7 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
     private lateinit var reminderTimeInput: EditText
     private var reminderTimeHour = 0
     private var reminderTimeMinute = 0
+    private var routine = "Routine"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +51,16 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
         val saveBtn = findViewById<Button>(R.id.detailSaveBtn)
         val cancelBtn = findViewById<Button>(R.id.detailCancelBtn)
         val medNameInput = findViewById<EditText>(R.id.medNameInput)
+        val routineBtn = findViewById<Button>(R.id.routineBtn)
         reminderTimeInput = findViewById(R.id.reminderTimeInput)
 
+        routineBtn.setOnClickListener { view ->
+            val i = Intent(this, RoutineCategoryActivity::class.java)
+            startActivityForResult(i, 1)
+        }
+
         saveBtn.setOnClickListener { view ->
-            val newMed = Med(medName=medNameInput.text.toString())
+            val newMed = Med(medName = medNameInput.text.toString(), routine = routine)
 //            newMedViewModel.addNewMedToDatabase(newMed)
             Single.fromCallable {
                 newMedViewModel.addNewMedToDatabaseNoAsyncTask(newMed)
@@ -71,6 +79,14 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
         }
     }
 
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                routine = data!!.extras.getString("routine")
+            }
+        }
+    }
+
     override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
         reminderTimeHour = p1
         reminderTimeMinute = p2
@@ -79,6 +95,10 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
 
     fun scheduleAlarm(v: View, uid: Long) {
         val calendar = Calendar.getInstance()
+        if (calendar.timeInMillis  <= System.currentTimeMillis())
+        {
+            calendar.add(Calendar.DATE, 1)
+        }
         calendar.set(Calendar.HOUR_OF_DAY, reminderTimeHour)
         calendar.set(Calendar.MINUTE, reminderTimeMinute)
         val intentAlarm = Intent(this, ReminderReceiver::class.java)
