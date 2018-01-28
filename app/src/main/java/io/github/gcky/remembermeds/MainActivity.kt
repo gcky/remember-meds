@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
 
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var mViewPager: ViewPager? = null
-    public var database: RoomDatabase? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,13 +54,6 @@ class MainActivity : AppCompatActivity() {
 
         val mTabLayout: TabLayout = findViewById(R.id.tabs)
         mTabLayout.setupWithViewPager(mViewPager)
-
-//        database =  Room.databaseBuilder(this, MedDatabase::class.java, "we-need-db").build()
-
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-//        }
 
         fab.setOnClickListener { view -> startDetailActivity() }
 

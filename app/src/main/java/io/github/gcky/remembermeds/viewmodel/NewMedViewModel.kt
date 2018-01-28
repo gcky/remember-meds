@@ -13,6 +13,10 @@ import io.github.gcky.remembermeds.data.MedRepository
 
 class NewMedViewModel internal constructor(private val repository: MedRepository) : ViewModel() {
 
+    fun addNewMedToDatabaseNoAsyncTask(med: Med): Long {
+        return repository.insertMed(med)
+    }
+
     fun addNewMedToDatabase(med: Med) {
         AddMedTask().execute(med)
     }

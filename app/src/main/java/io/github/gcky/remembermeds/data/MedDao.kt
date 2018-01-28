@@ -20,7 +20,7 @@ interface MedDao {
     fun getMedById(itemId: String): LiveData<Med>
 
     @Insert(onConflict = REPLACE)
-    fun insert(med: Med)
+    fun insert(med: Med): Long
 
     @Delete
     fun delete(med: Med)

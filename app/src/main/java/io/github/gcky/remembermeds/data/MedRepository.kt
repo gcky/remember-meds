@@ -27,8 +27,8 @@ class MedRepository {
         medDao!!.delete(med)
     }
 
-    fun insertMed(med: Med) {
-        medDao!!.insert(med)
+    fun insertMed(med: Med): Long {
+        return medDao!!.insert(med)
     }
 
     fun updateMed(med: Med) {

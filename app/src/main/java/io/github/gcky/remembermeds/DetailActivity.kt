@@ -1,29 +1,26 @@
 package io.github.gcky.remembermeds
 
-import android.app.Activity
-import android.app.Dialog
-import android.app.TimePickerDialog
+import android.app.*
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.app.AppCompatActivity
 import android.text.format.DateFormat
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TimePicker
+import android.support.v4.app.FragmentActivity
 import io.github.gcky.remembermeds.data.Med
-import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
 import io.github.gcky.remembermeds.viewmodel.NewMedViewModel
 import javax.inject.Inject
-import io.github.gcky.remembermeds.DetailActivity.TimePickerFragment
-import android.text.format.DateFormat.is24HourFormat
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
-import android.widget.TextView
+import android.support.v4.app.NotificationCompat
+import android.view.View
+import android.widget.*
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_detail.*
+import java.util.*
 
 
 /**
@@ -54,9 +51,15 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
         val medNameInput = findViewById<EditText>(R.id.medNameInput)
         reminderTimeInput = findViewById(R.id.reminderTimeInput)
 
-        saveBtn.setOnClickListener { _ ->
+        saveBtn.setOnClickListener { view ->
             val newMed = Med(medName=medNameInput.text.toString())
-            newMedViewModel.addNewMedToDatabase(newMed)
+//            newMedViewModel.addNewMedToDatabase(newMed)
+            Single.fromCallable {
+                newMedViewModel.addNewMedToDatabaseNoAsyncTask(newMed)
+            }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe { id ->
+                scheduleAlarm(view, id)
+            }
             finish()
         }
 
@@ -72,6 +75,18 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
         reminderTimeHour = p1
         reminderTimeMinute = p2
         reminderTimeInput.setText("$p1:$p2", TextView.BufferType.EDITABLE)
+    }
+
+    fun scheduleAlarm(v: View, uid: Long) {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, reminderTimeHour)
+        calendar.set(Calendar.MINUTE, reminderTimeMinute)
+        val intentAlarm = Intent(this, ReminderReceiver::class.java)
+        intentAlarm.putExtra("medName", medNameInput.text.toString())
+        intentAlarm.putExtra("uid", uid)
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, PendingIntent.getBroadcast(this, uid.toInt(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT))
+        Toast.makeText(this, "Medication added at $reminderTimeHour:$reminderTimeMinute", Toast.LENGTH_LONG).show()
     }
 
     class TimePickerFragment: DialogFragment() {
