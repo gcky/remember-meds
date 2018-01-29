@@ -23,6 +23,10 @@ class MedRepository {
         return medDao!!.getAllMeds()
     }
 
+    fun getAllMedsNonLive(): List<Med> {
+        return medDao!!.getAllMedsNonLive()
+    }
+
     fun deleteMed(med: Med) {
         medDao!!.delete(med)
     }

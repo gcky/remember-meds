@@ -24,6 +24,10 @@ class MedCollectionViewModel(repository: MedRepository): ViewModel() {
         return repository!!.getAllMeds()
     }
 
+    fun getMedsNonLive(): List<Med> {
+        return repository!!.getAllMedsNonLive()
+    }
+
     fun deleteMed(med: Med) {
         val deleteMedTask = DeleteMedTask()
         deleteMedTask.execute(med)

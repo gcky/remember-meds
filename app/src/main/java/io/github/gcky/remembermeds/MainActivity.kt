@@ -22,8 +22,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.meds_fragment.view.*
 import kotlinx.android.synthetic.main.today_fragment.view.*
 import android.R.attr.data
+import android.annotation.TargetApi
 import android.app.Activity
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.arch.lifecycle.ViewModelProvider
+import android.content.ComponentName
 import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
 import javax.inject.Inject
 
@@ -64,6 +68,16 @@ class MainActivity : AppCompatActivity() {
         val i = Intent(this, DetailActivity::class.java)
         startActivity(i)
     }
+
+//    @TargetApi(26)
+//    fun resetAlarms() {
+//        val serviceComponent = ComponentName(this, ResetAlarmsJobService::class.java)
+//        val builder = JobInfo.Builder(0, serviceComponent)
+//        builder.setMinimumLatency((1 * 1000).toLong()) // wait at least
+//        builder.setOverrideDeadline((3 * 1000).toLong()) // maximum delay
+//        val jobScheduler = getSystemService(JobScheduler::class.java)
+//        jobScheduler.schedule(builder.build())
+//    }
 
     fun setupViewPager(viewPager: ViewPager) {
         val adapter = SectionsPagerAdapter(supportFragmentManager)

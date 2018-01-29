@@ -101,7 +101,7 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, reminderTimeHour)
         calendar.set(Calendar.MINUTE, reminderTimeMinute)
-        if (calendar.timeInMillis  <= System.currentTimeMillis())
+        if (calendar.timeInMillis <= System.currentTimeMillis())
         {
             calendar.add(Calendar.DATE, 1)
         }

@@ -16,6 +16,9 @@ interface MedDao {
     @Query("SELECT * FROM Med")
     fun getAllMeds(): LiveData<List<Med>>
 
+    @Query("SELECT * FROM Med")
+    fun getAllMedsNonLive(): List<Med>
+
     @Query("SELECT * FROM Med WHERE itemId = :itemId")
     fun getMedById(itemId: String): LiveData<Med>
 

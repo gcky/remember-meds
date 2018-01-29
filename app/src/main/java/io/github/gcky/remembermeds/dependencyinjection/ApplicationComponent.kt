@@ -4,6 +4,7 @@ import android.app.Application
 import dagger.Component
 import io.github.gcky.remembermeds.DetailActivity
 import io.github.gcky.remembermeds.MedsFragment
+import io.github.gcky.remembermeds.RebootReceiver
 import io.github.gcky.remembermeds.TodayFragment
 import javax.inject.Singleton
 
@@ -20,6 +21,7 @@ interface ApplicationComponent {
     fun inject(todayFragment: TodayFragment)
     fun inject(medsFragment: MedsFragment)
     fun inject(detailActivity: DetailActivity)
+    fun inject(rebootReceiver: RebootReceiver)
 //    fun inject(createFragment: CreateFragment)
 //    fun inject(detailFragment: DetailFragment)
 

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.github.gcky.remembermeds">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <application
         android:name=".RememberMedApplication"
         android:allowBackup="true"
@@ -36,6 +38,14 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <receiver android:name=".ReminderReceiver"/>
+        <receiver android:name=".RebootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".ResetAlarmsJobService"
+            android:label="Reset alarm service"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 
 </manifest>
