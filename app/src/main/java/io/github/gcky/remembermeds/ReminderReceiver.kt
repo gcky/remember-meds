@@ -31,11 +31,11 @@ class ReminderReceiver : BroadcastReceiver() {
 
         // The id of the channel.
         val CHANNEL_ID = "meds_reminder"
-        val mChannel = NotificationChannel(CHANNEL_ID, "Medication reminders", NotificationManager.IMPORTANCE_DEFAULT)
+        val mChannel = NotificationChannel(CHANNEL_ID, "Medication reminders", NotificationManager.IMPORTANCE_HIGH)
         val mBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_add_black_24dp)
                 .setContentTitle(bundle.get("medName").toString())
-                .setContentText("Hello World!")
+                .setContentText("Take medication for routine: ${bundle.getString("routine")}")
 //        val resultIntent = Intent(context, MainActivity::class.java)
 //
 //// The stack builder object will contain an artificial back stack for the

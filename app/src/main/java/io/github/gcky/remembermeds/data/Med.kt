@@ -14,6 +14,7 @@ data class Med(
     var itemId: String = "",
     var medName: String = "",
     var routine: String = "",
-    var reminderTime: String = "",
+    var reminderTimeHour: Int = 0,
+    var reminderTimeMinute: Int = 0,
     var taken: Boolean = false
 )

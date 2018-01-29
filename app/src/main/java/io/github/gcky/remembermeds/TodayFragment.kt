@@ -76,7 +76,7 @@ class TodayFragment : Fragment() {
     fun setListData(medsList: List<Med>?) {
         println("INIT MEDS")
         println(medsList)
-        meds = medsList
+        meds = medsList?.sortedWith(compareBy(Med::reminderTimeHour, Med::reminderTimeMinute))
         val todayListView: ListView? = view?.findViewById(R.id.today_list_view)
         (todayListView?.adapter as BaseAdapter).notifyDataSetChanged()
     }
@@ -97,13 +97,15 @@ class TodayFragment : Fragment() {
             val todayCheckBox = rowMain.findViewById<CheckBox>(R.id.todayCheckBox)
             val med = meds!![position]
             medNameTextView.text = med.medName
-            medRoutineTextView.text = med.routine
+            medRoutineTextView.text = "${med.routine} (${med.reminderTimeHour}:${if (med.reminderTimeMinute == 0) "00" else med.reminderTimeMinute})"
 
             if (med.taken) {
                 medNameTextView.paintFlags = medNameTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                medRoutineTextView.paintFlags = medRoutineTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 todayCheckBox.isChecked = true
             } else {
                 medNameTextView.paintFlags = medNameTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                medRoutineTextView.paintFlags = medRoutineTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 todayCheckBox.isChecked = false
             }
             

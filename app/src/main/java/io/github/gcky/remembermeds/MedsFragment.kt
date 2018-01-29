@@ -18,6 +18,11 @@ import javax.inject.Inject
 import android.R.attr.button
 import android.support.design.widget.Snackbar
 import android.widget.Button
+import android.app.PendingIntent
+import android.content.Intent
+import android.app.AlarmManager
+
+
 
 
 /**
@@ -28,11 +33,7 @@ class MedsFragment : Fragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var medCollectionViewModel: MedCollectionViewModel
-    private var meds: List<Med>? = listOf(
-            Med(0, "abcde", "New Med 1", "Breakfast", "Time"),
-            Med(1, "axxxx", "New Med 2", "Dinner", "Time"),
-            Med(2, "esdfe", "New Med 3", "Breakfast", "Time")
-    )
+    private var meds: List<Med>? = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +73,7 @@ class MedsFragment : Fragment() {
     fun setListData(medsList: List<Med>?) {
         println("INIT MEDS")
         println(medsList)
-        meds = medsList
+        meds = medsList?.sortedWith(compareBy(Med::reminderTimeHour, Med::reminderTimeMinute))
         val medsListView: ListView? = view?.findViewById(R.id.meds_list_view)
         (medsListView?.adapter as BaseAdapter).notifyDataSetChanged()
     }
@@ -95,6 +96,10 @@ class MedsFragment : Fragment() {
             medRoutineTextView.text = meds!![position].routine
 
             medDeleteBtn.setOnClickListener{ view ->
+                val alarmManager = activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                val cancelIntent = Intent(context, ReminderReceiver::class.java)
+                val pendingIntent = PendingIntent.getBroadcast(context, meds!![position].uid.toInt(), cancelIntent, 0)
+                alarmManager.cancel(pendingIntent)
                 medCollectionViewModel.deleteMed(meds!![position])
             }
 
