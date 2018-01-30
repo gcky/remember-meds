@@ -28,6 +28,8 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.arch.lifecycle.ViewModelProvider
 import android.content.ComponentName
+import android.widget.BaseAdapter
+import android.widget.ListView
 import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
 import javax.inject.Inject
 
@@ -61,10 +63,16 @@ class MainActivity : AppCompatActivity() {
 
         fab.setOnClickListener { view -> startDetailActivity() }
 
+        broadcastSetMedsStatusResetAlarmIntent()
+    }
+
+    private fun broadcastSetMedsStatusResetAlarmIntent() {
+        val intent = Intent(this, MedsStatusResetAlarmReceiver::class.java)
+        sendBroadcast(intent)
     }
 
 
-    fun startDetailActivity() {
+    private fun startDetailActivity() {
         val i = Intent(this, DetailActivity::class.java)
         startActivity(i)
     }
@@ -79,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 //        jobScheduler.schedule(builder.build())
 //    }
 
-    fun setupViewPager(viewPager: ViewPager) {
+    private fun setupViewPager(viewPager: ViewPager) {
         val adapter = SectionsPagerAdapter(supportFragmentManager)
         adapter.addFragment(TodayFragment(), "Today")
         adapter.addFragment(MedsFragment(), "Medications")

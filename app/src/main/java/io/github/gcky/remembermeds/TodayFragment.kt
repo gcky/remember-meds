@@ -6,14 +6,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ListView
-import android.widget.TextView
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.BroadcastReceiver
+import android.content.Intent
 import android.graphics.Paint
-import android.widget.CheckBox
 import io.github.gcky.remembermeds.data.Med
 import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
 import javax.inject.Inject
@@ -22,6 +20,11 @@ import io.github.gcky.remembermeds.viewmodel.MedViewModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import android.support.v7.widget.RecyclerView
+import android.widget.*
+import android.content.IntentFilter
+
+
 
 
 /**
@@ -34,6 +37,7 @@ class TodayFragment : Fragment() {
     private lateinit var medCollectionViewModel: MedCollectionViewModel
     private lateinit var medViewModel: MedViewModel
     private var meds: List<Med>? = listOf()
+    private val receiver = MyBroadcastReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +51,7 @@ class TodayFragment : Fragment() {
 
         val todayListView: ListView? = view?.findViewById(R.id.today_list_view)
         todayListView?.adapter = MyCustomAdapter(activity)
+        (todayListView?.adapter as BaseAdapter).notifyDataSetChanged()
 
         return view
     }
@@ -66,7 +71,7 @@ class TodayFragment : Fragment() {
 //                        if (this@TodayFragment.meds == null) {
 //                            setListData(t)
 //                        }
-                        println(t)
+                        println("MED LIST CHANGED")
                         setListData(t)
                     }
 
@@ -79,6 +84,30 @@ class TodayFragment : Fragment() {
         meds = medsList?.sortedWith(compareBy(Med::reminderTimeHour, Med::reminderTimeMinute))
         val todayListView: ListView? = view?.findViewById(R.id.today_list_view)
         (todayListView?.adapter as BaseAdapter).notifyDataSetChanged()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("io.github.gcky.remembermeds.UPDATE_LIST_VIEW")
+        context.registerReceiver(receiver, intentFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        context.unregisterReceiver(receiver)
+    }
+
+    private inner class MyBroadcastReceiver: BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            Single.fromCallable {
+                medCollectionViewModel.getMedsNonLive()
+            }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe { t ->
+                println("UPDATE VIEW")
+                setListData(t)
+            }
+        }
     }
 
     private inner class MyCustomAdapter(context: Context): BaseAdapter() {

@@ -43,8 +43,13 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".MedsStatusResetReceiver" />
+        <receiver android:name=".MedsStatusResetAlarmReceiver"/>
         <service android:name=".ResetAlarmsJobService"
             android:label="Reset alarm service"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service android:name=".ResetMedsStatusJobService"
+            android:label="Reset meds status service"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 

@@ -1,5 +1,6 @@
 package io.github.gcky.remembermeds
 
+import android.annotation.TargetApi
 import android.app.AlarmManager
 import android.content.Intent
 import android.app.IntentService
@@ -23,18 +24,9 @@ import java.util.*
  * Created by Gordon on 29-Jan-18.
  */
 
-
-/**
- * A constructor is required, and must call the super IntentService(String)
- * constructor with a name for the worker thread.
- */
 class ResetAlarmsJobService : JobService() {
 
-    /**
-     * The IntentService calls this method from the default worker thread with
-     * the intent that started the service. When this method returns, IntentService
-     * stops the service, as appropriate.
-     */
+    @TargetApi(21)
     override fun onStartJob(params: JobParameters): Boolean {
         println("ALARMS RESET SERVICE STARTED")
         val database = Room.databaseBuilder(this, MedDatabase::class.java, "Med.db").build()
@@ -46,6 +38,7 @@ class ResetAlarmsJobService : JobService() {
             println("RECEIVED MEDS")
             resetAlarms(t)
         }
+        jobFinished(params, false)
         return true
     }
 

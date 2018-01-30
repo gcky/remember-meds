@@ -1,10 +1,11 @@
 package io.github.gcky.remembermeds.data
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.arch.persistence.room.Update
-
+import javax.inject.Singleton
 
 
 /**
