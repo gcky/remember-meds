@@ -91,6 +91,7 @@ class TodayFragment : Fragment() {
         val intentFilter = IntentFilter()
         intentFilter.addAction("io.github.gcky.remembermeds.UPDATE_LIST_VIEW")
         context.registerReceiver(receiver, intentFilter)
+        asyncUpdateList()
     }
 
     override fun onPause() {
@@ -100,13 +101,18 @@ class TodayFragment : Fragment() {
 
     private inner class MyBroadcastReceiver: BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-            Single.fromCallable {
-                medCollectionViewModel.getMedsNonLive()
-            }.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe { t ->
-                println("UPDATE VIEW")
-                setListData(t)
-            }
+            asyncUpdateList()
+        }
+    }
+
+    private fun asyncUpdateList() {
+        println("UPDATE TODAY LIST")
+        Single.fromCallable {
+            medCollectionViewModel.getMedsNonLive()
+        }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe { t ->
+            println("UPDATE VIEW")
+            setListData(t)
         }
     }
 
