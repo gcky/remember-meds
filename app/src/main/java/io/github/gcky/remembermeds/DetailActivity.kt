@@ -17,6 +17,7 @@ import android.support.constraint.ConstraintLayout
 import android.view.View
 import android.widget.*
 import io.github.gcky.remembermeds.receiver.ReminderReceiver
+import io.github.gcky.remembermeds.util.Utils
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -93,7 +94,7 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
     override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
         reminderTimeHour = p1
         reminderTimeMinute = p2
-        reminderTimeInput.setText("$p1:${if (p2 == 0) "00" else p2}", TextView.BufferType.EDITABLE)
+        reminderTimeInput.setText(Utils().timeToString(p1, p2), TextView.BufferType.EDITABLE)
     }
 
     fun scheduleAlarm(v: View, uid: Long) {

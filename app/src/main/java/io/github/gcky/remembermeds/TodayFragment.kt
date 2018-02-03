@@ -23,8 +23,7 @@ import io.reactivex.schedulers.Schedulers
 import android.support.v7.widget.RecyclerView
 import android.widget.*
 import android.content.IntentFilter
-
-
+import io.github.gcky.remembermeds.util.Utils
 
 
 /**
@@ -132,7 +131,7 @@ class TodayFragment : Fragment() {
             val todayCheckBox = rowMain.findViewById<CheckBox>(R.id.todayCheckBox)
             val med = meds!![position]
             medNameTextView.text = med.medName
-            medRoutineTextView.text = "${med.routine} (${med.reminderTimeHour}:${if (med.reminderTimeMinute == 0) "00" else med.reminderTimeMinute})"
+            medRoutineTextView.text = "${med.routine} (${Utils().timeToString(med.reminderTimeHour, med.reminderTimeMinute)})"
 
             if (med.taken) {
                 medNameTextView.paintFlags = medNameTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
