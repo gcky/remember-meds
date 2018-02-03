@@ -1,6 +1,7 @@
 package io.github.gcky.remembermeds
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,11 @@ import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import android.content.DialogInterface
+import android.text.InputType
+import android.widget.EditText
+
+
 
 /**
  * Created by Gordon on 28-Jan-18.
@@ -19,8 +25,8 @@ import android.widget.TextView
 
 class RoutineCategoryActivity : AppCompatActivity() {
 
-    private val categoryNames: ArrayList<String> = arrayListOf("Meals", "Home", "Sleep")
-    private val categoryDescriptions: ArrayList<String> = arrayListOf("Breakfast, Lunch, Dinner etc.", "Before leaving home, After arriving home etc.", "Before sleep, After wake-up etc.")
+    private val categoryNames: ArrayList<String> = arrayListOf("Meals", "Home", "Sleep", "Custom")
+    private val categoryDescriptions: ArrayList<String> = arrayListOf("Breakfast, Lunch, Dinner etc.", "Before leaving home, After arriving home etc.", "Before sleep, After wake-up etc.", "Specify your own routine")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +35,27 @@ class RoutineCategoryActivity : AppCompatActivity() {
         val listView = findViewById<ListView>(R.id.routine_category_list_view)
         listView.adapter = MyCustomAdapter(this)
         listView.setOnItemClickListener { adapterView, view, i, l ->
-            val data = Intent(this, RoutineSelectionActivity::class.java)
-            data.putExtra("category", categoryNames[i])
-            startActivityForResult(data, 2)
+            if (categoryNames[i] == "Custom") {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Custom routine name")
+
+                val input = EditText(this)
+                input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
+                builder.setView(input)
+                builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                    val data = Intent()
+                    data.putExtra("routine", input.text.toString())
+                    setResult(RESULT_OK, data)
+                    finish()
+                })
+                builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+
+                builder.show()
+            } else {
+                val data = Intent(this, RoutineSelectionActivity::class.java)
+                data.putExtra("category", categoryNames[i])
+                startActivityForResult(data, 2)
+            }
         }
 
         val cancelBtn = findViewById<Button>(R.id.routineCategoryCancelBtn)
