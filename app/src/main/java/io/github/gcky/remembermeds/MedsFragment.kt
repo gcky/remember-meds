@@ -15,14 +15,12 @@ import android.widget.TextView
 import io.github.gcky.remembermeds.data.Med
 import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
 import javax.inject.Inject
-import android.R.attr.button
-import android.support.design.widget.Snackbar
 import android.widget.Button
 import android.app.PendingIntent
 import android.content.Intent
 import android.app.AlarmManager
-
-
+import android.app.NotificationManager
+import io.github.gcky.remembermeds.receiver.ReminderReceiver
 
 
 /**
@@ -101,6 +99,8 @@ class MedsFragment : Fragment() {
                 val pendingIntent = PendingIntent.getBroadcast(context, meds!![position].uid.toInt(), cancelIntent, 0)
                 alarmManager.cancel(pendingIntent)
                 medCollectionViewModel.deleteMed(meds!![position])
+                val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                mNotificationManager.cancel(meds!![position].uid.toInt())
             }
 
             return rowMain

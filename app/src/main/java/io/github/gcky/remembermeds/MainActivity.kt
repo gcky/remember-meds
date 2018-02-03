@@ -1,37 +1,14 @@
 package io.github.gcky.remembermeds
 
-import android.arch.persistence.room.*
 import android.content.Intent
 import android.support.design.widget.TabLayout
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import io.reactivex.Flowable
 
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.meds_fragment.view.*
-import kotlinx.android.synthetic.main.today_fragment.view.*
-import android.R.attr.data
-import android.annotation.TargetApi
-import android.app.Activity
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.arch.lifecycle.ViewModelProvider
-import android.content.ComponentName
-import android.widget.BaseAdapter
-import android.widget.ListView
-import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
-import javax.inject.Inject
+import io.github.gcky.remembermeds.receiver.MedsStatusResetAlarmReceiver
 
 
 class MainActivity : AppCompatActivity() {

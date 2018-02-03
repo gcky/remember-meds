@@ -1,16 +1,13 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.receiver
 
 import android.annotation.TargetApi
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.support.v4.app.NotificationCompat
+import io.github.gcky.remembermeds.ResetMedsStatusJobService
 
 /**
  * Created by Gordon on 28-Jan-18.

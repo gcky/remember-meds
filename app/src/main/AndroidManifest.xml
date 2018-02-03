@@ -37,20 +37,25 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <receiver android:name=".ReminderReceiver"/>
-        <receiver android:name=".RebootReceiver">
+        <receiver android:name=".receiver.ReminderReceiver"/>
+        <receiver android:name=".receiver.RebootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".MedsStatusResetReceiver" />
-        <receiver android:name=".MedsStatusResetAlarmReceiver"/>
+        <receiver android:name=".receiver.MedsStatusResetReceiver" />
+        <receiver android:name=".receiver.MedsStatusResetAlarmReceiver"/>
+        <receiver android:name=".receiver.MarkAsTakenReceiver"/>
         <service android:name=".ResetAlarmsJobService"
             android:label="Reset alarm service"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service android:name=".ResetMedsStatusJobService"
             android:label="Reset meds status service"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service android:name=".MarkAsTakenJobService"
+            android:label="Mark as taken service"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
     </application>
 
 </manifest>

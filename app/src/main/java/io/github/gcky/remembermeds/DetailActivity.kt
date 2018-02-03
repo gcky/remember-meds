@@ -14,10 +14,9 @@ import javax.inject.Inject
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.support.constraint.ConstraintLayout
-import android.support.v4.app.NotificationCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.*
+import io.github.gcky.remembermeds.receiver.ReminderReceiver
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

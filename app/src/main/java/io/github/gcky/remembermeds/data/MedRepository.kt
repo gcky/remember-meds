@@ -20,6 +20,10 @@ class MedRepository {
         return medDao!!.getMedById(itemId)
     }
 
+    fun getMedNonLive(uid: Long): Med {
+        return medDao!!.getMedByUidNonLive(uid)
+    }
+
     fun getAllMeds(): LiveData<List<Med>> {
         return medDao!!.getAllMeds()
     }

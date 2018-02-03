@@ -1,15 +1,13 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.receiver
 
 import android.annotation.TargetApi
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.app.job.JobScheduler
 import android.app.job.JobInfo
 import android.content.ComponentName
-import java.util.*
+import io.github.gcky.remembermeds.ResetAlarmsJobService
 
 
 /**

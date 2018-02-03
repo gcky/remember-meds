@@ -23,6 +23,9 @@ interface MedDao {
     @Query("SELECT * FROM Med WHERE itemId = :itemId")
     fun getMedById(itemId: String): LiveData<Med>
 
+    @Query("SELECT * FROM Med WHERE uid = :uid")
+    fun getMedByUidNonLive(uid: Long): Med
+
     @Insert(onConflict = REPLACE)
     fun insert(med: Med): Long
 
