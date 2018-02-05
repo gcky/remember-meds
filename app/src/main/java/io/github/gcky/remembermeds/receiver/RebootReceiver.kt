@@ -7,7 +7,7 @@ import android.content.Intent
 import android.app.job.JobScheduler
 import android.app.job.JobInfo
 import android.content.ComponentName
-import io.github.gcky.remembermeds.ResetAlarmsJobService
+import io.github.gcky.remembermeds.service.ResetAlarmsJobService
 
 
 /**

@@ -11,7 +11,6 @@ import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.os.Build
 import io.github.gcky.remembermeds.MainActivity
-import io.github.gcky.remembermeds.MarkAsTakenJobService
 import io.github.gcky.remembermeds.R
 
 

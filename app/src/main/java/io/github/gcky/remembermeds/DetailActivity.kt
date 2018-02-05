@@ -12,12 +12,17 @@ import io.github.gcky.remembermeds.data.Med
 import io.github.gcky.remembermeds.viewmodel.NewMedViewModel
 import javax.inject.Inject
 import android.app.TimePickerDialog.OnTimeSetListener
+import android.arch.lifecycle.Observer
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.view.View
 import android.widget.*
+import io.github.gcky.remembermeds.data.MedDatabase
 import io.github.gcky.remembermeds.receiver.ReminderReceiver
 import io.github.gcky.remembermeds.util.Utils
+import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
+import io.github.gcky.remembermeds.viewmodel.MedViewModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -35,6 +40,7 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
     private lateinit var newMedViewModel: NewMedViewModel
     private lateinit var reminderTimeInput: EditText
     private lateinit var detailSelectedRoutineName: TextView
+    private lateinit var medNameInput: EditText
     private var reminderTimeHour = 0
     private var reminderTimeMinute = 0
     private var routine = "Routine"
@@ -52,27 +58,34 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
 
         val saveBtn = findViewById<Button>(R.id.detailSaveBtn)
         val cancelBtn = findViewById<Button>(R.id.detailCancelBtn)
-        val medNameInput = findViewById<EditText>(R.id.medNameInput)
+        medNameInput = findViewById<EditText>(R.id.medNameInput)
         val routineBtn = findViewById<ConstraintLayout>(R.id.detailSelectedRoutineBtn)
         reminderTimeInput = findViewById(R.id.reminderTimeInput)
         detailSelectedRoutineName = findViewById(R.id.detailSelectedRoutineName)
+
+        if (intent.extras.get("mode") as SaveMode == SaveMode.Edit) {
+            val database = Room.databaseBuilder(this, MedDatabase::class.java, "Med.db").build()
+            val medDao = database.medDao()
+            val uid = intent.extras.getLong("uid")
+            Single.fromCallable {
+                medDao.getMedByUidNonLive(uid)
+            }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe { med ->
+                medNameInput.setText(med.medName)
+                routine = med.routine
+                detailSelectedRoutineName.text = routine
+                reminderTimeHour = med.reminderTimeHour
+                reminderTimeMinute = med.reminderTimeMinute
+                reminderTimeInput.setText(Utils().timeToString(reminderTimeHour, reminderTimeMinute))
+            }
+        }
 
         routineBtn.setOnClickListener { view ->
             val i = Intent(this, RoutineCategoryActivity::class.java)
             startActivityForResult(i, 1)
         }
 
-        saveBtn.setOnClickListener { view ->
-            val newMed = Med(medName = medNameInput.text.toString(), routine = routine, reminderTimeHour = reminderTimeHour, reminderTimeMinute = reminderTimeMinute)
-//            newMedViewModel.addNewMedToDatabase(newMed)
-            Single.fromCallable {
-                newMedViewModel.addNewMedToDatabaseNoAsyncTask(newMed)
-            }.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe { id ->
-                scheduleAlarm(view, id)
-            }
-            finish()
-        }
+        saveBtn.setOnClickListener { _ -> saveMed() }
 
         cancelBtn.setOnClickListener { _ -> finish() }
 
@@ -80,6 +93,42 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
             val newFragment = TimePickerFragment()
             newFragment.show(supportFragmentManager, "time_picker")
         }
+    }
+
+    private fun saveMed() {
+        val mode = intent.extras.get("mode") as SaveMode
+        when (mode) {
+            SaveMode.New -> {
+                val newMed = Med(medName = medNameInput.text.toString(), routine = routine, reminderTimeHour = reminderTimeHour, reminderTimeMinute = reminderTimeMinute)
+                Single.fromCallable {
+                    newMedViewModel.addNewMedToDatabaseNoAsyncTask(newMed)
+                }.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe { uid ->
+                    scheduleAlarm(uid)
+                }
+            }
+            SaveMode.Edit -> {
+                val database = Room.databaseBuilder(this, MedDatabase::class.java, "Med.db").build()
+                val medDao = database.medDao()
+                val uid = intent.extras.getLong("uid")
+                Single.fromCallable {
+                    medDao.getMedByUidNonLive(uid)
+                }.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe { med ->
+                    val modifiedMed = Med(uid = med.uid, medName = medNameInput.text.toString(), routine = routine, reminderTimeHour = reminderTimeHour, reminderTimeMinute = reminderTimeMinute)
+                    val medViewModel = ViewModelProviders.of(this, viewModelFactory)
+                            .get(MedViewModel::class.java)
+                    Single.fromCallable {
+                        medViewModel.updateMed(modifiedMed)
+                    }.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread()).subscribe { _ ->
+                        unscheduleAlarm(uid)
+                        scheduleAlarm(uid)
+                    }
+                }
+            }
+        }
+        finish()
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -97,7 +146,14 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
         reminderTimeInput.setText(Utils().timeToString(p1, p2), TextView.BufferType.EDITABLE)
     }
 
-    fun scheduleAlarm(v: View, uid: Long) {
+    fun unscheduleAlarm(uid: Long) {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val cancelIntent = Intent(this, ReminderReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, uid.toInt(), cancelIntent, 0)
+        alarmManager.cancel(pendingIntent)
+    }
+
+    fun scheduleAlarm(uid: Long) {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, reminderTimeHour)
         calendar.set(Calendar.MINUTE, reminderTimeMinute)

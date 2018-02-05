@@ -7,7 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import io.github.gcky.remembermeds.ResetMedsStatusJobService
+import io.github.gcky.remembermeds.service.ResetMedsStatusJobService
 
 /**
  * Created by Gordon on 28-Jan-18.

@@ -1,4 +1,4 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.service
 
 import android.annotation.TargetApi
 import android.app.AlarmManager

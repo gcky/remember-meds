@@ -46,6 +46,13 @@ class MedsFragment : Fragment() {
         val medsListView: ListView? = view?.findViewById(R.id.meds_list_view)
         medsListView?.adapter = MyCustomAdapter(activity)
 
+        medsListView?.setOnItemClickListener { adapterView, view, i, l ->
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("mode", SaveMode.Edit)
+            intent.putExtra("uid", meds!![i].uid)
+            startActivity(intent)
+        }
+
         return view
     }
 

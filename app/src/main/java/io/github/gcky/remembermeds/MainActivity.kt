@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startDetailActivity() {
         val i = Intent(this, DetailActivity::class.java)
+        i.putExtra("mode", SaveMode.New)
         startActivity(i)
     }
 

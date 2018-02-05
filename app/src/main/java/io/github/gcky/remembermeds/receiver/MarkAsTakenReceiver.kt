@@ -8,7 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import io.github.gcky.remembermeds.MarkAsTakenJobService
+import io.github.gcky.remembermeds.service.MarkAsTakenJobService
 import android.os.PersistableBundle
 
 
