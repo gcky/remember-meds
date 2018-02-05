@@ -1,4 +1,4 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.util
 
 /**
  * Created by Gordon on 03-Feb-18.

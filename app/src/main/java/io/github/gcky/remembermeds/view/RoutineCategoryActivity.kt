@@ -1,4 +1,4 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.view
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -14,9 +14,10 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import android.content.DialogInterface
+import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.widget.EditText
-
+import io.github.gcky.remembermeds.R
 
 
 /**
@@ -28,9 +29,21 @@ class RoutineCategoryActivity : AppCompatActivity() {
     private val categoryNames: ArrayList<String> = arrayListOf("Meals", "Home", "Sleep", "Custom")
     private val categoryDescriptions: ArrayList<String> = arrayListOf("Breakfast, Lunch, Dinner etc.", "Before leaving home, After arriving home etc.", "Before sleep, After wake-up etc.", "Specify your own routine")
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_routine_category)
+
+        val myToolbar: Toolbar = findViewById<Toolbar>(R.id.routine_category_toolbar) as Toolbar
+        setSupportActionBar(myToolbar)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_material)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.title = "Routines"
 
         val listView = findViewById<ListView>(R.id.routine_category_list_view)
         listView.adapter = MyCustomAdapter(this)
@@ -58,11 +71,11 @@ class RoutineCategoryActivity : AppCompatActivity() {
             }
         }
 
-        val cancelBtn = findViewById<Button>(R.id.routineCategoryCancelBtn)
-        cancelBtn.setOnClickListener { view ->
-            setResult(Activity.RESULT_CANCELED)
-            finish()
-        }
+//        val cancelBtn = findViewById<Button>(R.id.routineCategoryCancelBtn)
+//        cancelBtn.setOnClickListener { view ->
+//            setResult(Activity.RESULT_CANCELED)
+//            finish()
+//        }
 
     }
 

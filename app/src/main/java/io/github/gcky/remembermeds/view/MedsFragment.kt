@@ -1,4 +1,4 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.view
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -20,6 +20,9 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.app.AlarmManager
 import android.app.NotificationManager
+import io.github.gcky.remembermeds.R
+import io.github.gcky.remembermeds.RememberMedApplication
+import io.github.gcky.remembermeds.util.SaveMode
 import io.github.gcky.remembermeds.receiver.ReminderReceiver
 
 

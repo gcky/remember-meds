@@ -1,4 +1,4 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.view
 
 import android.app.*
 import android.arch.lifecycle.ViewModelProvider
@@ -12,29 +12,33 @@ import io.github.gcky.remembermeds.data.Med
 import io.github.gcky.remembermeds.viewmodel.NewMedViewModel
 import javax.inject.Inject
 import android.app.TimePickerDialog.OnTimeSetListener
-import android.arch.lifecycle.Observer
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.support.constraint.ConstraintLayout
-import android.view.View
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.widget.*
+import io.github.gcky.remembermeds.R
+import io.github.gcky.remembermeds.RememberMedApplication
+import io.github.gcky.remembermeds.util.SaveMode
 import io.github.gcky.remembermeds.data.MedDatabase
 import io.github.gcky.remembermeds.receiver.ReminderReceiver
 import io.github.gcky.remembermeds.util.Utils
-import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
 import io.github.gcky.remembermeds.viewmodel.MedViewModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_detail.*
 import java.util.*
+import io.github.gcky.remembermeds.R.id.toolbar
+
+
 
 
 /**
  * Created by Gordon on 26-Jan-18.
  */
 
-class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
+class DetailActivity: AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var newMedViewModel: NewMedViewModel
@@ -44,6 +48,11 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
     private var reminderTimeHour = 0
     private var reminderTimeMinute = 0
     private var routine = "Routine"
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,11 +66,17 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
                 .get(NewMedViewModel::class.java)
 
         val saveBtn = findViewById<Button>(R.id.detailSaveBtn)
-        val cancelBtn = findViewById<Button>(R.id.detailCancelBtn)
         medNameInput = findViewById<EditText>(R.id.medNameInput)
         val routineBtn = findViewById<ConstraintLayout>(R.id.detailSelectedRoutineBtn)
         reminderTimeInput = findViewById(R.id.reminderTimeInput)
         detailSelectedRoutineName = findViewById(R.id.detailSelectedRoutineName)
+
+        val myToolbar: Toolbar = findViewById<Toolbar>(R.id.routine_category_toolbar) as Toolbar
+        setSupportActionBar(myToolbar)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.abc_ic_clear_material)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.title = "New Medication"
 
         if (intent.extras.get("mode") as SaveMode == SaveMode.Edit) {
             val database = Room.databaseBuilder(this, MedDatabase::class.java, "Med.db").build()
@@ -86,8 +101,6 @@ class DetailActivity: FragmentActivity(), TimePickerDialog.OnTimeSetListener {
         }
 
         saveBtn.setOnClickListener { _ -> saveMed() }
-
-        cancelBtn.setOnClickListener { _ -> finish() }
 
         reminderTimeInput.setOnClickListener { _ ->
             val newFragment = TimePickerFragment()

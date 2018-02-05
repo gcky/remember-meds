@@ -10,7 +10,7 @@ import android.support.v4.app.TaskStackBuilder
 import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.os.Build
-import io.github.gcky.remembermeds.MainActivity
+import io.github.gcky.remembermeds.view.MainActivity
 import io.github.gcky.remembermeds.R
 
 

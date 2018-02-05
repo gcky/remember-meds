@@ -1,10 +1,11 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.view
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import io.github.gcky.remembermeds.R
 
 /**
  * Created by Gordon on 28-Jan-18.
@@ -30,6 +32,11 @@ class RoutineSelectionActivity : AppCompatActivity() {
 
     private var selectedNames: ArrayList<String> = mealNames
     private var selectedDescriptions: ArrayList<String> = mealDescriptions
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +58,13 @@ class RoutineSelectionActivity : AppCompatActivity() {
             }
         }
 
+        val myToolbar: Toolbar = findViewById<Toolbar>(R.id.routine_category_toolbar) as Toolbar
+        setSupportActionBar(myToolbar)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_material)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.title = bundle.getString("category")
+
         val listView = findViewById<ListView>(R.id.routine_selection_list_view)
         listView.adapter = MyCustomAdapter(this)
         listView.setOnItemClickListener { adapterView, view, i, l ->
@@ -60,11 +74,11 @@ class RoutineSelectionActivity : AppCompatActivity() {
             finish()
         }
 
-        val cancelBtn = findViewById<Button>(R.id.routineSelectionCancelBtn)
-        cancelBtn.setOnClickListener { view ->
-            setResult(Activity.RESULT_CANCELED)
-            finish()
-        }
+//        val cancelBtn = findViewById<Button>(R.id.routineSelectionCancelBtn)
+//        cancelBtn.setOnClickListener { view ->
+//            setResult(Activity.RESULT_CANCELED)
+//            finish()
+//        }
 
     }
 

@@ -1,4 +1,4 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.view
 
 import android.content.Intent
 import android.support.design.widget.TabLayout
@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity
 
 import android.support.v4.view.ViewPager
 import android.os.Bundle
+import io.github.gcky.remembermeds.R
+import io.github.gcky.remembermeds.util.SaveMode
 
 import kotlinx.android.synthetic.main.activity_main.*
 import io.github.gcky.remembermeds.receiver.MedsStatusResetAlarmReceiver

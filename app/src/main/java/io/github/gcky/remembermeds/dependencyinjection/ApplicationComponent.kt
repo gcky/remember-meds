@@ -2,10 +2,10 @@ package io.github.gcky.remembermeds.dependencyinjection
 
 import android.app.Application
 import dagger.Component
-import io.github.gcky.remembermeds.DetailActivity
-import io.github.gcky.remembermeds.MedsFragment
+import io.github.gcky.remembermeds.view.DetailActivity
+import io.github.gcky.remembermeds.view.MedsFragment
 import io.github.gcky.remembermeds.receiver.RebootReceiver
-import io.github.gcky.remembermeds.TodayFragment
+import io.github.gcky.remembermeds.view.TodayFragment
 import javax.inject.Singleton
 
 

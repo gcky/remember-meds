@@ -1,4 +1,4 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.view
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager

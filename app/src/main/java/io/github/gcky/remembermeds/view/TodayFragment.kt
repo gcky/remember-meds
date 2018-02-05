@@ -1,4 +1,4 @@
-package io.github.gcky.remembermeds
+package io.github.gcky.remembermeds.view
 
 import android.content.Context
 import android.os.Bundle
@@ -15,14 +15,14 @@ import android.graphics.Paint
 import io.github.gcky.remembermeds.data.Med
 import io.github.gcky.remembermeds.viewmodel.MedCollectionViewModel
 import javax.inject.Inject
-import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import io.github.gcky.remembermeds.viewmodel.MedViewModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import android.support.v7.widget.RecyclerView
 import android.widget.*
 import android.content.IntentFilter
+import io.github.gcky.remembermeds.R
+import io.github.gcky.remembermeds.RememberMedApplication
 import io.github.gcky.remembermeds.util.Utils
 
 
