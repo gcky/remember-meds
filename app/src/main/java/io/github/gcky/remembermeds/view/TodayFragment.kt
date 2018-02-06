@@ -1,5 +1,7 @@
 package io.github.gcky.remembermeds.view
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -23,7 +25,9 @@ import android.widget.*
 import android.content.IntentFilter
 import io.github.gcky.remembermeds.R
 import io.github.gcky.remembermeds.RememberMedApplication
+import io.github.gcky.remembermeds.receiver.ReminderReceiver
 import io.github.gcky.remembermeds.util.Utils
+import java.util.*
 
 
 /**
@@ -117,11 +121,7 @@ class TodayFragment : Fragment() {
 
     private inner class MyCustomAdapter(context: Context): BaseAdapter() {
 
-        private val mContext: Context
-
-        init {
-            mContext = context
-        }
+        private val mContext: Context = context
 
         override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup?): View {
             val layoutInflater = LayoutInflater.from(mContext)
@@ -149,6 +149,7 @@ class TodayFragment : Fragment() {
                     medViewModel.updateMed(med)
                 }.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe()
+                rescheduleAlarm(med)
             }
             
             return rowMain
@@ -164,6 +165,22 @@ class TodayFragment : Fragment() {
 
         override fun getCount(): Int {
             return meds!!.size
+        }
+
+        private fun rescheduleAlarm(med: Med) {
+            val calendar = Calendar.getInstance()
+            val currentCalendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, med.reminderTimeHour)
+            calendar.set(Calendar.MINUTE, med.reminderTimeMinute)
+            if (currentCalendar.timeInMillis < calendar.timeInMillis) {
+                calendar.add(Calendar.DATE, 1)
+                val intentAlarm = Intent(context, ReminderReceiver::class.java)
+                intentAlarm.putExtra("medName", med.medName)
+                intentAlarm.putExtra("routine", med.routine)
+                intentAlarm.putExtra("uid", med.uid)
+                val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, PendingIntent.getBroadcast(context, med.uid.toInt(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT))
+            }
         }
 
     }

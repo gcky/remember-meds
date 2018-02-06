@@ -74,12 +74,6 @@ class RoutineSelectionActivity : AppCompatActivity() {
             finish()
         }
 
-//        val cancelBtn = findViewById<Button>(R.id.routineSelectionCancelBtn)
-//        cancelBtn.setOnClickListener { view ->
-//            setResult(Activity.RESULT_CANCELED)
-//            finish()
-//        }
-
     }
 
     private inner class MyCustomAdapter(context: Context): BaseAdapter() {

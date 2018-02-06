@@ -30,6 +30,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import io.github.gcky.remembermeds.R.id.toolbar
+import android.content.DialogInterface
+import android.content.DialogInterface.BUTTON_NEUTRAL
+
+
 
 
 
@@ -45,9 +49,9 @@ class DetailActivity: AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
     private lateinit var reminderTimeInput: EditText
     private lateinit var detailSelectedRoutineName: TextView
     private lateinit var medNameInput: EditText
-    private var reminderTimeHour = 0
-    private var reminderTimeMinute = 0
-    private var routine = "Routine"
+    private var reminderTimeHour = -1
+    private var reminderTimeMinute = -1
+    private var routine = ""
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
@@ -109,6 +113,14 @@ class DetailActivity: AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
     }
 
     private fun saveMed() {
+        if (routine == "" || reminderTimeHour == -1 || reminderTimeMinute == -1 || medNameInput.text.toString() == "") {
+            val alertDialog = AlertDialog.Builder(this).create()
+            alertDialog.setTitle("Detail Missing")
+            alertDialog.setMessage("Please fill in all fields.")
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK") { dialog, which -> dialog.dismiss() }
+            alertDialog.show()
+            return
+        }
         val mode = intent.extras.get("mode") as SaveMode
         when (mode) {
             SaveMode.New -> {

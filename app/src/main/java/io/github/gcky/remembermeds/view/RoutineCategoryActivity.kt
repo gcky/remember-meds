@@ -71,12 +71,6 @@ class RoutineCategoryActivity : AppCompatActivity() {
             }
         }
 
-//        val cancelBtn = findViewById<Button>(R.id.routineCategoryCancelBtn)
-//        cancelBtn.setOnClickListener { view ->
-//            setResult(Activity.RESULT_CANCELED)
-//            finish()
-//        }
-
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

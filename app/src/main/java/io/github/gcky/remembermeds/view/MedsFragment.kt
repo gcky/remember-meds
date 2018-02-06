@@ -68,9 +68,6 @@ class MedsFragment : Fragment() {
         medCollectionViewModel.getMeds().observe(this,
                 object: Observer<List<Med>> {
                     override fun onChanged(t: List<Med>?) {
-//                        if (this@TodayFragment.meds == null) {
-//                            setListData(t)
-//                        }
                         println(t)
                         setListData(t)
                     }
