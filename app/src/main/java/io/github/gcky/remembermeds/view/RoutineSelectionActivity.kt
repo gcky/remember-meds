@@ -21,7 +21,7 @@ import io.github.gcky.remembermeds.R
 
 class RoutineSelectionActivity : AppCompatActivity() {
 
-    private val mealNames: ArrayList<String> = arrayListOf("Breakfast", "Lunch", "Dinner")
+    private val mealNames: ArrayList<String> = arrayListOf("After Breakfast", "After Lunch", "After Dinner")
     private val mealDescriptions: ArrayList<String> = arrayListOf("Every morning", "Every day at mid-day", "Every evening")
 
     private val homeNames: ArrayList<String> = arrayListOf("Before leaving home", "After arriving home")

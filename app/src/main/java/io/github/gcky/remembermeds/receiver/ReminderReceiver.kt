@@ -32,8 +32,8 @@ class ReminderReceiver : BroadcastReceiver() {
 
         val mBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_add_black_24dp)
-                .setContentTitle(bundle.get("medName").toString())
-                .setContentText("Take medication for routine: ${bundle.getString("routine")}")
+                .setContentTitle("Remember to take ${bundle.get("medName")} ${bundle.getString("routine").toLowerCase()}")
+                .setContentText("Also remember to mark it as taken in the app!")
                 .setContentIntent(resultPendingIntent)
 
         val actionIntent = Intent(context, MarkAsTakenReceiver::class.java)

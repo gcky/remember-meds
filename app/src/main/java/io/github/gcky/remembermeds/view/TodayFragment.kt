@@ -1,6 +1,7 @@
 package io.github.gcky.remembermeds.view
 
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Bundle
@@ -71,9 +72,6 @@ class TodayFragment : Fragment() {
         medCollectionViewModel.getMeds().observe(this,
                 object: Observer<List<Med>> {
                     override fun onChanged(t: List<Med>?) {
-//                        if (this@TodayFragment.meds == null) {
-//                            setListData(t)
-//                        }
                         println("MED LIST CHANGED")
                         setListData(t)
                     }
@@ -145,6 +143,27 @@ class TodayFragment : Fragment() {
             
             todayCheckBox.setOnCheckedChangeListener { button, b ->
                 med.taken = b
+                val calendar = Calendar.getInstance()
+                val currentCalendar = Calendar.getInstance()
+                calendar.set(Calendar.HOUR_OF_DAY, med.reminderTimeHour)
+                calendar.set(Calendar.MINUTE, med.reminderTimeMinute)
+                calendar.add(Calendar.MINUTE, 30)
+                if (b) {
+                    if (currentCalendar.timeInMillis < calendar.timeInMillis) {
+                        med.onTimeCount += 1
+                        med.takenOnTime = true
+                        if (med.onTimeCount >= 7) med.reminderOn = false
+                    } else {
+                        med.takenOnTime = false
+                        med.onTimeCount = 0
+                        med.reminderOn = true
+                    }
+                } else {
+                    med.onTimeCount -= 1
+                    if (med.takenOnTime && med.onTimeCount == 6) {
+                        med.reminderOn = true
+                    }
+                }
                 Single.fromCallable {
                     medViewModel.updateMed(med)
                 }.subscribeOn(Schedulers.io())
@@ -168,12 +187,18 @@ class TodayFragment : Fragment() {
         }
 
         private fun rescheduleAlarm(med: Med) {
-            val calendar = Calendar.getInstance()
-            val currentCalendar = Calendar.getInstance()
-            calendar.set(Calendar.HOUR_OF_DAY, med.reminderTimeHour)
-            calendar.set(Calendar.MINUTE, med.reminderTimeMinute)
-            if (currentCalendar.timeInMillis < calendar.timeInMillis) {
-                calendar.add(Calendar.DATE, 1)
+            if (med.reminderOn) {
+                val calendar = Calendar.getInstance()
+                val currentCalendar = Calendar.getInstance()
+                calendar.set(Calendar.HOUR_OF_DAY, med.reminderTimeHour)
+                calendar.set(Calendar.MINUTE, med.reminderTimeMinute)
+                if (med.taken) {
+                    calendar.add(Calendar.DATE, 1)
+                } else {
+                    if (calendar.timeInMillis < currentCalendar.timeInMillis) {
+                        calendar.add(Calendar.DATE, 1)
+                    }
+                }
                 val intentAlarm = Intent(context, ReminderReceiver::class.java)
                 intentAlarm.putExtra("medName", med.medName)
                 intentAlarm.putExtra("routine", med.routine)

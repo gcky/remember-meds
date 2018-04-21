@@ -16,5 +16,8 @@ data class Med(
     var routine: String = "",
     var reminderTimeHour: Int = 0,
     var reminderTimeMinute: Int = 0,
-    var taken: Boolean = false
+    var taken: Boolean = false,
+    var onTimeCount: Int = 0,
+    var reminderOn: Boolean = true,
+    var takenOnTime: Boolean = false
 )
